@@ -31,9 +31,9 @@ rm(list = ls())
 
 SPECIES  <- 'Laying_hen'
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Avian_Wegg.R")
-source(paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/", SPECIES, "_PhyData.R", sep = ''))
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Metabolism.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Avian_Wegg.R")
+source(paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/", SPECIES, "_PhyData.R", sep = ''))
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Metabolism.R")
 
 df_tissue_human                     <- tissue.data[which(tissue.data$Species == 'Human'),]
 Vliver_human                        <- subset(df_tissue_human , variable == "Vol (L/kg)" &
@@ -144,7 +144,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
 
 
 ## Permeability-surface area product L/d kg
@@ -343,7 +343,7 @@ input(seq(from = 11, to = 15, by = 0.1))
 plot(input(seq(1, 20, by = 0.1)), type="p", xlab = "Time (min)", ylab = "Butadiene inhaled concentration (ppm)")'
 
 ######## scenario 2: realistic feeding scenario, following feed pattern (Clark et al. 2019; Choi et al. 2004)
-'Intake_pattern    <- read.csv("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/Intake pattern/Pattern.csv")
+'Intake_pattern    <- read.csv("C:/xxx/OneDrive - Syngenta/HTTK/Bird/Intake pattern/Pattern.csv")
 Intake_pattern    <- na.omit(Intake_pattern )
 x                 <- Intake_pattern $Time/24
 y                 <- Intake_pattern $g * Dose_conc / BW             # g * ug/g -> ug/bw
@@ -694,7 +694,7 @@ df  <- ode(y       = initState,
 df               <- as.data.frame(df)
 colnames(df)[1]  <- "Time"
 
-write.csv(df, paste('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+write.csv(df, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 #=============================================================================
 ############                End of PBPK model                    #############
@@ -703,8 +703,8 @@ study1 <- "Metabolism_O_1998_hen"  # 7.66
 study2 <- "Metabolism_T_1998_hen"  # 7.92
 
 ######           Plot           ###########
-Metabolism_1998_TMX           <- read_excel("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study1)
-#Metabolism_1998_TMX           <- read_excel("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study2)
+Metabolism_1998_TMX           <- read_excel("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study1)
+#Metabolism_1998_TMX           <- read_excel("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study2)
 
 # urine
 Metabolism_1998_excreta       <- Metabolism_1998_TMX[Metabolism_1998_TMX$Matrix == 'Excreta',]
@@ -786,7 +786,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXBlood_0106.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXBlood_0106.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -815,7 +815,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDBlood_0106.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDBlood_0106.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -872,7 +872,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXLiver.tiff", sep = ''),
+ggsave(filename = paste("C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXLiver.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
   
 
@@ -903,19 +903,11 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDLiver.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDLiver.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
-# ggplot() +
-#   geom_line(data = df, aes(Time-0.3, C_adipose_parent), col="#00AFBB", lwd=2) +
-#   geom_point(data = df_Metabolism_1998_fat  , aes(Time_h/24, TMXfatConc_umolL),col="red", size=2.5) + ylab("Concentration")+
-#   theme(text = element_text(size = 20)) #+ xlim(3, 4)
-# 
-# ggplot() +
-#   geom_line(data = df, aes(Time-0.3, C_adipose_daughter), col="#00AFBB", lwd=2) +
-#   geom_point(data = df_Metabolism_1998_fat  , aes(Time_h/24, CLOfatConc_umolL),col="red", size=2.5) + ylab("Concentration")+
-#   theme(text = element_text(size = 20)) #+ xlim(3, 4) #+ ylim(0,1)
+
 
 
 
@@ -945,7 +937,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXurine_0106.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXurine_0106.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -973,7 +965,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDurine_0106.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDurine_0106.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -1012,7 +1004,7 @@ ggplot() +
   theme(text = element_text(size = 20))
 
 df_white_out                       <- df[(df$Time - 0.37)%%1 < 1e-5,]
-write.csv(df_white_out, paste('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggwhite.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+write.csv(df_white_out, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggwhite.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 
 ggplot() +
@@ -1040,7 +1032,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggWhite.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggWhite.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -1069,7 +1061,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggWhite.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggWhite.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -1118,7 +1110,7 @@ df_Cyolk_out_parent  <- df_yolk_out_parent[c('Time', 'Cyolk1_parent', 'Cyolk2_pa
 rownames(df_Cyolk_out_parent) <- 1:nrow(df_Cyolk_out_parent)
 mdata                         <- melt(df_Cyolk_out_parent, id=c("Time"))
 mdata2                        <- mdata[which(mdata$value == 0)-1,] 
-write.csv(mdata2, paste('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.TMX.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+write.csv(mdata2, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.TMX.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 ggplot() +
   geom_line(data = mdata2, aes(Time, value, col="Prediction"), lwd=1,  size = 3) + 
@@ -1145,7 +1137,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggYolk.tiff", sep = ''),
+ggsave(filename = paste("C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggYolk.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -1159,7 +1151,7 @@ df_Cyolk_out_daughter  <- df_yolk_out_daughter[c('Time', 'Cyolk1_daughter', 'Cyo
 rownames(df_Cyolk_out_daughter) <- 1:nrow(df_Cyolk_out_daughter)
 mdata_daughter                         <- melt(df_Cyolk_out_daughter, id=c("Time"))
 mdata2_daughter                        <- mdata_daughter[which(mdata_daughter$value == 0)-1,] 
-write.csv(mdata2_daughter, paste('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.CTD.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+write.csv(mdata2_daughter, paste('C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.CTD.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 ggplot() +
   geom_line(data = mdata2_daughter, aes(Time, value, col="Prediction"), lwd=1, size=3) + 
@@ -1186,7 +1178,7 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggYolk.tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggYolk.tiff", sep = ''),
        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
 
 
@@ -1235,7 +1227,7 @@ ggplot(obs_byw) +
   scale_color_brewer(palette = "Set1") + 
   labs(title = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''))+
   ylab(expression("Concentration ("*mu*"mol/L)")) + xlab('Time (d)')
-ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen_Panel.", dose, ".tiff", sep = ''),
+ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen_Panel.", dose, ".tiff", sep = ''),
        dpi = 300, width = 26, height = 20,units = "cm",compression = 'lzw')
 
 ggplot(df_byw) +

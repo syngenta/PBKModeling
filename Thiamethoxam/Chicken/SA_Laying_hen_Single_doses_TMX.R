@@ -29,10 +29,10 @@ rm(list = ls())
 
 SPECIES  <- 'Laying_hen'
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Avian_Wegg.R")
-source(paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/", SPECIES, "_PhyData.R", sep = ''))
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Metabolism.R")
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/SA_Laying_hen_Single_doses_TMX_Event.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Avian_Wegg.R")
+source(paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/", SPECIES, "_PhyData.R", sep = ''))
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Metabolism.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/SA_Laying_hen_Single_doses_TMX_Event.R")
 
 df_tissue_human                     <- tissue.data[which(tissue.data$Species == 'Human'),]
 Vliver_human                        <- subset(df_tissue_human , variable == "Vol (L/kg)" &
@@ -137,7 +137,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
 
 
 ##########################################################
@@ -439,55 +439,14 @@ for (i in 1: 46){
 }
 
 NSC               <- cbind(NSC.AUC, NSC.Cmax)
-write.csv(NSC, paste('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Laying Hen/Sensitivity.csv'), row.names = TRUE)
+write.csv(NSC, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Laying Hen/Sensitivity.csv'), row.names = TRUE)
 
 #=============================================================================
 ############                End of PBPK model                    #############
 #=============================================================================
 
 
-# Mass balance
-# it is difficult to evaluate becase state variable related to egg white and yolk were set to zero routinly.
-ggplot() +
-  geom_line (data = df, aes(Time, AUC), col="#00AFBB", lwd=2) + ylab("Mass balance (umol)") +
-  xlab("Time (d)") + theme(text = element_text(size = 20))  + theme_bw(base_size = 14)
-
-ggplot() +
-  geom_line (data = df, aes(Time, Cmax), col="#00AFBB", lwd=2) + ylab("Mass balance (umol)") +
-  xlab("Time (d)") + theme(text = element_text(size = 20))  + theme_bw(base_size = 14)
 
 
 
 
-
-# ggplot() +
-#   geom_line(data = df, aes(Time-0.3, C_blood_parent, color = "Prediction"),  lwd=0.7) +
-#   #geom_point(data = df_Metabolism_1998_blood  , aes(Time_h/24, TMXBloodConc_umolL, shape = 'Observation'),col="#ff5044",  size=1.8) +
-#   theme(text = element_text(size = 20)) + xlim(0, 4) + 
-#   xlab("Time (d)") + 
-#   ylab(expression("TMX Blood Concentration ("*mu*"mol/L)")) +
-#   theme_bw() + 
-#   theme(plot.title = element_text(size=9), plot.subtitle = element_text(size=7))+
-#   theme(text = element_text(size = 12))  + 
-#   # legend
-#   scale_color_manual(name = NULL,
-#                      values = c('#00AFBB', "#ff5044"),
-#                      breaks=c("Prediction", "Observation")) +
-#   scale_shape_manual(name=NULL, values=c(17)) +
-#   scale_linetype_manual(name = NULL,values='solid')+ guides(color = guide_legend(override.aes = list(shape = 16)))+
-#   theme(legend.position = 'right',
-#         legend.background = element_rect(fill="white",
-#                                          size=0.5, linetype="solid",
-#                                          colour ="white"),
-#         legend.spacing.y = unit(-0.2, 'cm'),
-#         legend.text=element_text(size=8)) 
-#   # Titles and Labels
-#   # ggtitle(
-#   #   label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
-#   #   subtitle = paste("Thiamethoxam (TMX)"))
-# # ggsave(filename = paste("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXBlood.tiff", sep = ''),
-# #        dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
-# 
-# 
-# 
-# 

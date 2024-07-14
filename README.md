@@ -1,6 +1,6 @@
 # Git Repository for PBK Modeling 
 
-![PBPK](https://github.com/user-attachments/assets/920c731c-1f2a-4788-b06c-1453b029bd3f)
+![PBPK60](https://github.com/user-attachments/assets/056b3823-c86f-45dc-bd8d-227e51fab20f)
 
 ## Description
 This Git repository houses all the PBK modeling coding scripts developed by the North America team at Syngenta Crop Protection. 

@@ -230,7 +230,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
 
 
 

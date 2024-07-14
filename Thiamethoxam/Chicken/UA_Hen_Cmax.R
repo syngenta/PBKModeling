@@ -28,9 +28,9 @@ library(minpack.lm)  # Package for model fitting
 ##########                            Uncertainty analysis (Cmax)                             ##########
 #======================================================================================================
 
-SA_hen       <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Laying Hen/Sensitivity.csv')
-SA_duck      <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Duck/Sensitivity.csv')
-SA_quail     <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Quail/Sensitivity.csv')
+SA_hen       <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Laying Hen/Sensitivity.csv')
+SA_duck      <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Duck/Sensitivity.csv')
+SA_quail     <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Quail/Sensitivity.csv')
 
 SA_hen$Species        <- 'Chicken'
 SA_duck$Species       <- 'Duck'
@@ -659,8 +659,8 @@ stat <- stat %>%
 
 
 
-write.csv(SA_Cmax_chicken, "C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/SA_Cmax_chicken.csv")
-write.csv(stat, "C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/UA_Cmax_chicken.csv")
+write.csv(SA_Cmax_chicken, "C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/SA_Cmax_chicken.csv")
+write.csv(stat, "C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Laying hen/UA_Cmax_chicken.csv")
 
 
 

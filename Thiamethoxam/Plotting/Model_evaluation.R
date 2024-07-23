@@ -72,10 +72,10 @@ df_obs                     <- bind_rows(df_obs_TMX, df_obs_CTD)
 colnames(df_obs)[2]        <- 'BloodConc'
 
 #######################   Modeling results   #######################
-df_320ppm      <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.320ppm.csv')
-df_1000ppm     <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.1000ppm.csv')
-df_2000ppm     <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.2000ppm.csv')
-df_3200ppm     <- read.csv('C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.3200ppm.csv')
+df_320ppm      <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.320ppm.csv')
+df_1000ppm     <- read.csv('C:/xxxOneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.1000ppm.csv')
+df_2000ppm     <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.2000ppm.csv')
+df_3200ppm     <- read.csv('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/quail.adlib.3200ppm.csv')
 
 df_320ppm$Dose      <- '320 ppm'
 df_1000ppm$Dose     <- '1000 ppm'
@@ -174,7 +174,7 @@ p1
 
 ggsave("Evaluation_quail.tiff",scale = 1,
        plot = p1,
-       path = "C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/",
+       path = "C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Quail/",
        width = 15, height = 15, units = "cm",dpi=600, compression = 'lzw')
 
 
@@ -519,7 +519,7 @@ p1
 
 ggsave("Evaluation_hen.tiff",scale = 1,
        plot = p1,
-       path = "C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/",
+       path = "C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/",
        width = 15, height = 15, units = "cm", dpi=600, compression = 'lzw')
 
 max(df$log.obs)

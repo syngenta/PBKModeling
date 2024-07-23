@@ -139,7 +139,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
 
 
 ## Permeability-surface area product L/d kg
@@ -260,7 +260,7 @@ Times         <- seq(StartTime, StopTime, dt)
 
 Oral_input    <- 0.901 * 1000 / MW_parent                 # ug/kg/d  -> umol/kg/d
 
-# dose pattern 89/91 Sitovition report; C:\Users\s1036120\OneDrive - Syngenta\HTTK\Bird\Intake pattern\pattern.xlsx
+# dose pattern 89/91 Sitovition report; C:\xxx\OneDrive - Syngenta\HTTK\Bird\Intake pattern\pattern.xlsx
 var                <- rep("Agutlumen_parent", 24 * days/1)                                   # dose pattern every one hour
 time               <- seq(0, (days), by = 1/24)
 time               <- time[-length(time)]

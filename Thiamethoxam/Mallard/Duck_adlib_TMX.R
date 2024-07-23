@@ -140,7 +140,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/Users/s1036120/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
 
 ## Permeability-surface area product L/d kg
 PSc_adipose_parent      <- Peff_parent * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000            # Peff * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000  # cm/s -> cm/d * g/kg * cm2/g -> cm3/d kg -> L/d kg

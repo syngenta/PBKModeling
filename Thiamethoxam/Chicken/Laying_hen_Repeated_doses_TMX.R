@@ -284,7 +284,7 @@ dose          <- 7.66
 #Oral_input    <- 7.66 * 1000 / MW_parent                  # umol/kg/d, STUDY 1
 Oral_input    <- dose * 1000 / MW_parent                  # umol/kg/d, STUDY 2
 
-# dose pattern 89/91 Sitovition report; C:\Users\s1036120\OneDrive - Syngenta\HTTK\Bird\Intake pattern\pattern.xlsx
+# dose pattern 89/91 Sitovition report; C:\Users\xxx\OneDrive - Syngenta\HTTK\Bird\Intake pattern\pattern.xlsx
 var                <- rep("Agutlumen_parent", 24 * days/1)                                   # dose pattern every one hour
 time               <- seq(0, (days), by = 1/24)
 time               <- time[-length(time)]

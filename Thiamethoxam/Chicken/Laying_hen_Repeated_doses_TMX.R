@@ -19,7 +19,6 @@ library(ggplot2)
 library(httk)
 
 rm(list = ls())
-#dev.off()
 
 #==================================================================================================
 #                                      Species: Laying Hen                                        # 
@@ -30,10 +29,14 @@ rm(list = ls())
 # httk: https://github.com/USEPA/CompTox-ExpoCast-httk/tree/main/httk
 
 SPECIES  <- 'Laying_hen'
+BW             <- 1.45                  # kg, body weight of 18 weeks female laying hen
 
-source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Avian_Wegg.R")
-source(paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/", SPECIES, "_PhyData.R", sep = ''))
-source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Metabolism.R")
+current_dir <- getwd()
+print(current_dir)
+
+source(file.path("HTTK", "Bird", "General code", "Avian_Wegg.R"))
+source(file.path("HTTK", "Bird", "General code", paste(SPECIES, "_PhyData.R", sep = '')))
+source(file.path("HTTK", "Bird", "General code", 'Metabolism.R'))
 
 df_tissue_human                     <- tissue.data[which(tissue.data$Species == 'Human'),]
 Vliver_human                        <- subset(df_tissue_human , variable == "Vol (L/kg)" &
@@ -45,7 +48,7 @@ Vliver_human                        <- subset(df_tissue_human , variable == "Vol
 # physico-chemical properties  
 species        <- 'Rat'                 # (either "Rat", "Rabbit", "Dog", "Mouse", or "Human").
 # Table 1, Gasthuys, Elke 2019 Comparative physiology of glomerular filtration rate by plasma clearance of exogenous creatinine and exo-iohexol in six different avian species
-BW             <- 1.45                  # kg, body weight of 18 weeks female laying hen
+
 SDBW           <- 0.08
 BW_broiler     <- 2.5                   # kg
 BW_mouse       <- 0.02
@@ -79,18 +82,12 @@ fuinc_hep_parent                 <- 9999                                  # bind
 parent_hep_conc_binding          <- 9999
 
 
-c <- chem.physical_and_invitro.data
-TMX  <- as.data.frame(c[c$CAS ==  '153719-23-4',])
-CLO  <- as.data.frame(c[c$CAS ==  '210880-92-5',])
-PPZ  <- c[c$CAS ==  '60207-90-1',]
-
-
 ######################        Clothianidin        ##########################
 MW_daughter             <- 249.7
 CAS_daughter            <- '210880-92-5a'
 S_daughter              <- 340                    # mg/L; http://sitem.herts.ac.uk/aeru/ppdb/en/Reports/631.htm
 pKa_a_daughter          <- 11.1                   # No dissociation; http://sitem.herts.ac.uk/aeru/ppdb/en/Reports/171.htm; pKa_Donor="pka.a") Compound H dissociation equilibirum constant
-pKa_b_daughter          <- 14-11.1                  # pka accept (base) Compound H association equilibirum constant
+pKa_b_daughter          <- 14-11.1                # pka accept (base) Compound H association equilibirum constant
 fub_daughter            <- 0.71                   # fraction unbound in plasma of rat; from SED
 LogP_daughter           <- 0.70                   # LogP httk
 Peff_daughter           <- 19.8E-6                # Cacao permeability (cm/s) from SED for human
@@ -99,7 +96,7 @@ Compound_name_daughter  <- 'Clothianidin (CLO)'
 Density.daughter        <- 1.61                   # g/cm3 # http://sitem.herts.ac.uk/aeru/ppdb/en/Reports/631.htm
 Rblood2plasma_daughter  <-'None' 
 
-Vmax_unit_daughter          <- 'none'                 # 'umol/h/kg bw' or 'none'
+Vmax_unit_daughter          <- 'none'             # 'umol/h/kg bw' or 'none'
 incubation_hep_daughter     <- 'scaled'           # human
 Vmax_hep_daughter           <- "None"
 Km_hep_daughter             <- 'None'
@@ -144,10 +141,9 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                                 species     = species,
                                                 reference   ="SED")
 
-source("C:/xxx/OneDrive - Syngenta/HTTK/Bird/General Code/Partition.R")
+source(file.path("HTTK", "Bird", "General code", "Partition.R"))
 
-
-## Permeability-surface area product L/d kg
+## Permeability-surface area product L/d kg; not used
 PSc_adipose_parent      <- Peff_parent * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000            # Peff * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000  # cm/s -> cm/d * g/kg * cm2/g -> cm3/d kg -> L/d kg
 PSc_adipose_daughter    <- Peff_daughter * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000          # Peff * 3600 * 24 * (Vadipose * 1000) * S_adipose /1000  # cm/s -> cm/d * g/kg * cm2/g -> cm3/d kg -> L/d kg
 
@@ -158,19 +154,9 @@ PSc_adipose_daughter    <- Peff_daughter * 3600 * 24 * (Vadipose * 1000) * S_adi
 # calculate of ka; use rat ka first 
 # R_rat             <- 0.2             # 0.2cm # radius of rat jejunum
 Peff_human        <- 10^(0.4926 * log10(Peff_parent * 1e6) - 0.1454)         # Peff is in the unit of e-6 cm/s; 1e-4 cm/s
-Peff_rat          <- (Peff_human - 0.03)/3.6                            # 1e-4 cm/s
-ka                <-  12.1847922 #2 * Peff_rat / R_rat / 1e4 * 3600 * 24            # d-1
-
-#R_hen         <-  10/10/2                                     # radius of chicken jejunum,cm; Table 6 Kamil, Dariusz  2020
-#ka_broiler    <-  22                                          # 13.03
-#ka            <-  ka_broiler * (BW / BW_broiler)^(-0.25)      # 2 * Peff / R_hen * 3600 * 24                # h-1   ---> d-1
-# Mean retention time (MRT) in the small intestine (3h), Birger Svihus KhaledItani 2019
-# Table 10, Wang et al, 2020 chicken and turkey; not used
-#factor        <- 1
-#kt_broiler    <- log(0.98/0.02)/3 * 24 * factor                      # Transit rate constant (1/h) 1.3  ---> 1/d
-#kt            <-  kt_broiler * ((BW / BW_broiler)^(-0.25))
-
-fa        <- 0.9 #249.7 / 291.72                                   # absorption fraction;
+Peff_rat          <- (Peff_human - 0.03)/3.6                                 # 1e-4 cm/s
+ka                <-  12.1847922 
+fa                <- 0.9                                                     # absorption fraction;
 
 ####################################################################
 ###                    clearance (L/d/kg BW)                     ###  
@@ -227,8 +213,6 @@ Clint_hep_daughter               <- calc_metabolic_clearance(type_clearance     
 # Abstract, Gasthuys, Elke 2019 Comparative physiology of glomerular filtration rate by plasma clearance of exogenous creatinine and exo-iohexol in six different avian species
 factor            <-  1
 Qgfr_broiler      <-  3.4  * BW_broiler                                                 ## L/d
-#Qgfr_parent       <-  Qgfr_broiler * ((BW / BW_broiler)^0.75) /BW                       ## 2.6 / 1000 * 60  * 24 * factor   L/d/kg BW L for laying hen and duck
-#Qgfr_daughter     <-  Qgfr_broiler * ((BW / BW_broiler)^0.75) /BW  
 
 # laying hen Abstract, Gasthuys, Elke 2019 Comparative physiology of
 Qgfr_parent       <-  2.57 /1000 * 60 * 24                       ## 2.6 / 1000 * 60  * 24 * factor   L/d/kg BW L for laying hen and duck
@@ -238,7 +222,7 @@ Qgfr_daughter     <-  2.57 /1000 * 60 * 24
 
 
 #######################################################################
-###                     partition coefficients                      ###  to unbound plasma; 12 for rat, 14 for human
+###                     partition coefficients                      ###  to unbound plasma; 
 #######################################################################
 ## predicting the tissue to unbound plasma partition coefficients for the tissues contained in the tissue.data table 
 # predicting partitioning cofficient for different tissues, rightnow assume using adjusted Funbound 
@@ -247,20 +231,11 @@ Rblood2plasma_daughter   <- if(is.numeric(Rblood2plasma_daughter)){Rblood2plasma
 
 ######            calculation of Kw and Ky                 ######
 # Yolk & white
-# ky_parent            <-  calc_partition(pKa_Donor = pKa_a_parent, pKa_Accept = pKa_b_parent, LogP_parent,
-#                                         Fcell_y, Fint_y, FW_y, FL_y, Fpr_y, Fn_L_y, Fn_PL_y, Fa_PL_y, 
-#                                         fub_parent, tissue.pH = pH_y, plasma.pH = plasma.pH ) * fub_parent          # rate constant (unitless) for egg yolk
-# 
-# ky_daughter          <-  calc_partition(pKa_Donor = pKa_a_daughter, pKa_Accept = pKa_b_daughter, LogP_daughter,
-#                                         Fcell_y, Fint_y, FW_y, FL_y, Fpr_y, Fn_L_y, Fn_PL_y, Fa_PL_y, 
-#                                         fub_daughter, tissue.pH = pH_y, plasma.pH = plasma.pH ) * fub_daughter      # rate constant (unitless) for egg yolk
-
-#kw_parent            <-  calc_kw(pKa_a_parent,   pKa_b_parent,   fub_parent)                                        # partition to egg white
-#kw_daughter          <-  calc_kw(pKa_a_daughter, pKa_b_daughter, fub_daughter)
 ky_parent            <-  calc_ky(pKa_a_parent,   pKa_b_parent,   fub_parent) 
 ky_daughter          <-  calc_ky(pKa_a_daughter, pKa_b_daughter, fub_daughter) 
 kw_parent            <-  calc_kw_Kdw(pKa_a_parent,   pKa_b_parent,   fub_parent) 
 kw_daughter          <-  calc_kw_Kdw(pKa_a_daughter, pKa_b_daughter, fub_daughter) 
+
 #=================================================================================
 #                                    PBPK                                        #
 #=================================================================================
@@ -284,11 +259,10 @@ dose          <- 7.66
 #Oral_input    <- 7.66 * 1000 / MW_parent                  # umol/kg/d, STUDY 1
 Oral_input    <- dose * 1000 / MW_parent                  # umol/kg/d, STUDY 2
 
-# dose pattern 89/91 Sitovition report; C:\Users\xxx\OneDrive - Syngenta\HTTK\Bird\Intake pattern\pattern.xlsx
+# dose pattern \HTTK\Bird\Intake pattern\pattern.xlsx (Clark et al. 2019; Choi et al. 2004)
 var                <- rep("Agutlumen_parent", 24 * days/1)                                   # dose pattern every one hour
 time               <- seq(0, (days), by = 1/24)
 time               <- time[-length(time)]
-#value_1        <-     c(2.7,4.8,8.1,12.4,16.5,22.4,33.2,47.4,62.9,78.7,91.8,100)            # Table A6 in appendix; not used
 value_1            <-  c(0,
                          0.002022362,
                          0.004044725,
@@ -316,46 +290,10 @@ value_1            <-  c(0,
 
 
 value_percent  <- c(rep(value_1, days))
-
 value          <- value_percent  *  Oral_input 
-
 time           <- seq(0, (days), by = 1/24)
 
-# Dose_events    <- data.frame(var,
-#                              time,
-#                              value,
-#                              method = "add")
-
-# Dose_events    <- data.frame(var    = rep("Agutlumen_parent", 4),
-#                              time   = c(0.3, 1.3, 2.3, 3.3),
-#                              value  = rep(Oral_input, 4),
-#                              method = "add")
-
-### Approxfun is only appropriate for external input use (not for state variable change!!!)
-######## scenario 1: pulse input daily, lasting for a certain period
-'signal        <- data.frame(times = dose_times , import = rep(0, length(dose_times)))
-signal$import <- ifelse((signal$times) %% 1 == 0, Dose  , 0)  # 100 mg  ---> ug/kg bw
-signal
-                           
-
-input         <- approxfun(signal,  method = "constant", yleft = 0, yright = 0, f = 0, rule = 2)
-input(seq(from = 11, to = 15, by = 0.1))
-plot(input(seq(1, 20, by = 0.1)), type="p", xlab = "Time (min)", ylab = "Butadiene inhaled concentration (ppm)")'
-
-######## scenario 2: realistic feeding scenario, following feed pattern (Clark et al. 2019; Choi et al. 2004)
-'Intake_pattern    <- read.csv("C:/xxx/OneDrive - Syngenta/HTTK/Bird/Intake pattern/Pattern.csv")
-Intake_pattern    <- na.omit(Intake_pattern )
-x                 <- Intake_pattern $Time/24
-y                 <- Intake_pattern $g * Dose_conc / BW             # g * ug/g -> ug/bw
-
-xx                <- seq(from = 0, to = (Time_max - 1/24), by = 1/24)
-yy                <- rep(y, times = Time_max, each = 1)
-
-input             <- approxfun(xx, yy) 
-curve(input(x), 0, Time_max, col = "green2")
-curve(input(x), 0, 5, col = "green2")
-points(xx, yy)'
-
+source(file.path("HTTK", "Bird", "TMX", 'Laying hen', 'event_repeated.R'))
 
 ########################################################################################################################
 #                                                  PBPK MODEL RUN                                                      #
@@ -378,7 +316,7 @@ initState <- c(Agutlumen_parent  = 0,
                Ayolk7_parent     = 0,
                Ayolk8_parent     = 0,
                Ayolk9_parent     = 0,
-               Awhite_parent     = 0,  #19
+               Awhite_parent     = 0,  # no 19
                Wyolk1     = egg_yolk / (1+exp(-(0-(0.38-tsig-tlag)))) /1000,
                Wyolk2     = egg_yolk / (1+exp(-(0-(1.38-tsig-tlag)))) /1000,
                Wyolk3     = egg_yolk / (1+exp(-(0-(2.38-tsig-tlag)))) /1000,
@@ -393,7 +331,7 @@ initState <- c(Agutlumen_parent  = 0,
                Aart_parent        = 0,
                Aurine_parent      = 0,
                AUC_Cplasma_parent = 0,
-               AUC_Cblood_parent  = 0, # 34
+               AUC_Cblood_parent  = 0,  #34
                
                Agut_daughter       = 0,  
                Aliver_daughter     = 0,
@@ -429,196 +367,12 @@ initState <- c(Agutlumen_parent  = 0,
                Aliver_daughter_out = 0)
 
 
-
-##########################      pbpk output     #############################  
-## event triggered if time %%24 = 0
-## https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000160.html
-## https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000158.html
-# https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000606.html          continuous infusion
-# https://cran.r-project.org/web/packages/pksensi/vignettes/pbtk1cpt.html
-# https://rstudio-pubs-static.s3.amazonaws.com/557239_2e4541dc478b4ef69a2ff2664da352bd.html  (inhalation)
-# https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html    approxfun (useful for infusion and inhalation)
-
-# https://stackoverflow.com/questions/71009453/combining-root-and-non-root-event-functions-in-r-desolve
-
-'root <- function(t, y, parms) {return(t%%1)}
-## set state variable Ww = 0
-event <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  return(y)
-}'
-
-# DOSING WAS FOR 5 CONSECUTIVE DAYS FOLLOWED BY A WITHDRAWAL PERIOD OF 7 DAYS
-eventdose <- data.frame(var    = rep("Agutlumen_parent", 4),
-                        time   = c(0.3, 1.3, 2.3, 3.3),
-                        value  = rep(Oral_input, 4),
-                        method = "add")
-
-
-
-event_dose <- function(t, y, parms) {
-  y[1]       <- y[1] + Oral_input                                  
-  return(y)
-}
-
-eventW <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white parent
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  return(y)
-}
-
-event1 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white parent
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[10]      <- 0                                             # chemical mass in egg yolk 1 parent
-  y[42]      <- 0                                             # chemical mass in egg yolk 1 daughter
-  y[20]      <- 0.1/1000                                      # mass in egg yolk 1
-  return(y)
-}
-
-event2 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[11]      <- 0                                             # chemical mass in egg yolk 2
-  y[43]      <- 0                                             # chemical mass in egg yolk 2 daughter
-  y[21]      <- 0.1/1000                                      # mass in egg yolk 2
-  return(y)
-}
-
-event3 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[12]      <- 0                                             # chemical mass in egg yolk 3
-  y[44]      <- 0                                             # chemical mass in egg yolk 3 daughter
-  y[22]      <- 0.1/1000                                      # mass in egg yolk 3
-  return(y)
-}
-
-event4 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[13]      <- 0                                             # chemical mass in egg yolk 4
-  y[45]      <- 0                                             # chemical mass in egg yolk 41 daughter
-  y[23]      <- 0.1/1000                                      # mass in egg yolk 4
-  return(y)
-}
-
-event5 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[14]      <- 0                                             # chemical mass in egg yolk 5
-  y[46]      <- 0                                             # chemical mass in egg yolk 5 daughter
-  y[24]      <- 0.1/1000                                      # mass in egg yolk 5
-  return(y)
-}
-
-event6 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[15]      <- 0                                             # chemical mass in egg yolk 6
-  y[47]      <- 0                                             # chemical mass in egg yolk 6 daughter
-  y[25]      <- 0.1/1000                                      # mass in egg yolk 6
-  return(y)
-}
-
-event7 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[16]      <- 0                                             # chemical mass in egg yolk 7
-  y[48]      <- 0                                             # chemical mass in egg yolk 7 daughter
-  y[26]      <- 0.1/1000                                      # mass in egg yolk 7
-  return(y)
-}
-
-event8 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[17]      <- 0                                             # chemical mass in egg yolk 8
-  y[49]      <- 0                                             # chemical mass in egg yolk 8 daughter
-  y[27]      <- 0.1/1000                                      # mass in egg yolk 8
-  return(y)
-}
-
-event9 <- function(t, y, parms) {
-  y[8]       <- 0.1/1000                                      # 0.1 mL mass of egg white
-  y[19]      <- 0                                             # chemical mass in egg white
-  y[51]      <- 0                                             # chemical mass in egg white daughter
-  y[18]      <- 0                                             # chemical mass in egg yolk 9
-  y[50]      <- 0                                             # chemical mass in egg yolk 9 daughter
-  y[28]      <- 0.1/1000                                      # mass in egg yolk 9
-  return(y)
-}
-
-
-
-root_repeated <- function(t, y, parms) {
-  yroot      <- c(((t-0.38)%%1),   ((t-0.38)/9)%%1, ((t-1.38)/9)%%1, ((t-2.38)/9)%%1, 
-                  ((t-3.38)/9)%%1, ((t-4.38)/9)%%1, ((t-5.38)/9)%%1, ((t-6.38)/9)%%1, 
-                  ((t-7.38)/9)%%1, ((t-8.38)/9)%%1, (t-17.38), 
-                  (t-64.38),        (t-65.38),      (t-66.38),        (t-67.38),
-                  (t-68.38),        (t-69.38),      (t-70.38),        (t-71.38),
-                  (t-126.38),       (t-127.38), 
-                  (t-123.38),       (t-124.38),     (t-125.38), 
-                  (t-0.3),          (t-1.3),        (t-2.3),          (t-3.3))
-  return(yroot)
-}
-
-event_repeated <- function(t, y, parms) {
-  ret     <- y
-  if((abs(t-0.38)%%1)     < 1e-6)  ret <- eventW(t, y, parms)
-  if(abs(((t-0.38)/9)%%1) < 1e-6)  ret <- event1(t, y, parms)
-  if(abs(((t-1.38)/9)%%1) < 1e-6)  ret <- event2(t, y, parms)
-  if(abs(((t-2.38)/9)%%1) < 1e-6)  ret <- event3(t, y, parms)
-  if(abs(((t-3.38)/9)%%1) < 1e-6)  ret <- event4(t, y, parms)
-  if(abs(((t-4.38)/9)%%1) < 1e-6)  ret <- event5(t, y, parms)
-  if(abs(((t-5.38)/9)%%1) < 1e-6)  ret <- event6(t, y, parms)
-  if(abs(((t-6.38)/9)%%1) < 1e-6)  ret <- event7(t, y, parms)
-  if(abs(((t-7.38)/9)%%1) < 1e-6)  ret <- event8(t, y, parms)
-  if(abs(((t-8.38)/9)%%1) < 1e-6)  ret <- event9(t, y, parms)
-  if(abs(t-17.38) < 1e-6)          ret <- event9(t, y, parms)
-  if(abs(t-64.38) < 1e-6)          ret <- event2(t, y, parms)
-  if(abs(t-65.38) < 1e-6)          ret <- event3(t, y, parms)
-  if(abs(t-66.38) < 1e-6)          ret <- event4(t, y, parms)
-  if(abs(t-67.38) < 1e-6)          ret <- event5(t, y, parms)
-  if(abs(t-68.38) < 1e-6)          ret <- event6(t, y, parms)
-  if(abs(t-69.38) < 1e-6)          ret <- event7(t, y, parms)
-  if(abs(t-70.38) < 1e-6)          ret <- event8(t, y, parms)
-  if(abs(t-71.38) < 1e-6)          ret <- event9(t, y, parms)
-  
-  if(abs(t-126.38) < 1e-6)         ret <- event1(t, y, parms)
-  if(abs(t-127.38) < 1e-6)         ret <- event2(t, y, parms)
-  if(abs(t-123.38) < 1e-6)         ret <- event7(t, y, parms)
-  if(abs(t-124.38) < 1e-6)         ret <- event8(t, y, parms)
-  if(abs(t-125.38) < 1e-6)         ret <- event9(t, y, parms)
-  
-  if(abs(t-0.3) < 1e-6)              ret <- event_dose(t, y, parms)
-  if(abs(t-1.3) < 1e-6)              ret <- event_dose(t, y, parms)
-  if(abs(t-2.3) < 1e-6)              ret <- event_dose(t, y, parms)
-  if(abs(t-3.3) < 1e-6)              ret <- event_dose(t, y, parms)
-  #if(abs(t-4) < 1e-6)              ret <- event_dose(t, y, parms)
-  
-  return((ret))
-}
-
-
 #########################    parameters for exposure scenario ###############
-factor <- 1
-
 parms <- c( dt            = dt,
-            ka            = ka,                 # h-1
+            ka            = ka,                 
             fa            = fa,  
-            Clint_parent         = Clint_hep_parent   * 37, # 37
-            Clint_daughter       = Clint_hep_daughter / 3,   # /4
+            Clint_parent         = Clint_hep_parent   * 37, 
+            Clint_daughter       = Clint_hep_daughter / 3,   
             
             Rblood2plasma_parent   = Rblood2plasma_parent,  
             Rblood2plasma_daughter = Rblood2plasma_daughter,   
@@ -629,23 +383,23 @@ parms <- c( dt            = dt,
             fraction_daughter    = 1,
             
             # ratio
-            Kgut2pu_parent       = Kgut2pu_parent    * factor,      
-            Kkidney2pu_parent    = Kkidney2pu_parent * factor,   
-            Kliver2pu_parent     = Kliver2pu_parent  * factor,     
-            Klung2pu_parent      = Klung2pu_parent   * factor,      
-            Krest2pu_parent      = Krest2pu_parent   * factor, 
-            Kadipose2pu_parent   = Kadipose2pu_parent * factor,
-            Kmuscle2pu_parent    = Kmuscle2pu_parent * factor,
-            Krep2pu_parent       = Krep2pu_parent    * factor,
+            Kgut2pu_parent       = Kgut2pu_parent    ,      
+            Kkidney2pu_parent    = Kkidney2pu_parent ,   
+            Kliver2pu_parent     = Kliver2pu_parent  ,     
+            Klung2pu_parent      = Klung2pu_parent   ,      
+            Krest2pu_parent      = Krest2pu_parent   , 
+            Kadipose2pu_parent   = Kadipose2pu_parent ,
+            Kmuscle2pu_parent    = Kmuscle2pu_parent ,
+            Krep2pu_parent       = Krep2pu_parent    ,
             
-            Kgut2pu_daughter       = Kgut2pu_daughter    * factor,      
-            Kkidney2pu_daughter    = Kkidney2pu_daughter * factor,   
-            Kliver2pu_daughter     = Kliver2pu_daughter  * factor,     
-            Klung2pu_daughter      = Klung2pu_daughter   * factor,      
-            Krest2pu_daughter      = Krest2pu_daughter   * factor, 
-            Kadipose2pu_daughter   = Kadipose2pu_daughter * factor,
-            Kmuscle2pu_daughter    = Kmuscle2pu_daughter * factor,
-            Krep2pu_daughter       = Krep2pu_daughter    * factor,
+            Kgut2pu_daughter       = Kgut2pu_daughter    ,      
+            Kkidney2pu_daughter    = Kkidney2pu_daughter ,   
+            Kliver2pu_daughter     = Kliver2pu_daughter  ,     
+            Klung2pu_daughter      = Klung2pu_daughter   ,      
+            Krest2pu_daughter      = Krest2pu_daughter   , 
+            Kadipose2pu_daughter   = Kadipose2pu_daughter ,
+            Kmuscle2pu_daughter    = Kmuscle2pu_daughter ,
+            Krep2pu_daughter       = Krep2pu_daughter    ,
 
             tsig          = tsig,
             tlag          = tlag,
@@ -656,7 +410,7 @@ parms <- c( dt            = dt,
             
             # Parametes for flow 
             Qart          = Qart, 
-            Qgfr_parent   = Qgfr_parent * 1.4 ,# * 2.3,   
+            Qgfr_parent   = Qgfr_parent * 1.4 ,   
             Qgfr_daughter = Qgfr_daughter * 5.9,
             
             Qgut          = Qgut,
@@ -694,7 +448,8 @@ df  <- ode(y       = initState,
 df               <- as.data.frame(df)
 colnames(df)[1]  <- "Time"
 
-write.csv(df, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+file_path     <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", "Hen")
+write.csv(df, paste(file_path, '/hen.oral.', dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 #=============================================================================
 ############                End of PBPK model                    #############
@@ -703,8 +458,9 @@ study1 <- "Metabolism_O_1998_hen"  # 7.66
 study2 <- "Metabolism_T_1998_hen"  # 7.92
 
 ######           Plot           ###########
-Metabolism_1998_TMX           <- read_excel("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study1)
-#Metabolism_1998_TMX           <- read_excel("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/InvivoData.xlsx", sheet = study2)
+file_path                     <- file.path(current_dir, "HTTK", "Bird", "TMX", "InvivoData.xlsx")
+Metabolism_1998_TMX           <- read_excel(file_path, sheet = study1)
+#Metabolism_1998_TMX           <- read_excel(file_path, sheet = study2)
 
 # urine
 Metabolism_1998_excreta       <- Metabolism_1998_TMX[Metabolism_1998_TMX$Matrix == 'Excreta',]
@@ -745,7 +501,7 @@ df_Metabolism_1998_fat               <- subset(Metabolism_1998_fat, select = c('
 
 
 # Mass balance
-# it is difficult to evaluate becase state variable related to egg white and yolk were set to zero routinly.
+# it is difficult to evaluate for laying hen because state variable related to egg white and yolk were set to zero routinly.
 ggplot() +
   geom_line (data = df, aes(Time, Mass_parent_bal), col="#00AFBB", lwd=2) + ylab("Mass balance (umol)") +
   xlab("Time (h)") + theme(text = element_text(size = 20))  + theme_bw(base_size = 14)
@@ -786,8 +542,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXBlood_0106.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".TMXBlood_0106.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 ggplot() +
@@ -815,8 +572,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDBlood_0106.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".CTDBlood_0106.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 df_blood_parent           <- as.data.frame(df %>% dplyr::select(Time, C_blood_parent))
@@ -845,8 +603,6 @@ obs_1998_blood_daughter$Matrix   <- "Blood"
 
 ### panel plot
 # http://zevross.com/blog/2019/04/02/easy-multi-panel-plots-in-r-using-facet_wrap-and-facet_grid-from-ggplot2/
-
-
 ggplot() +
   geom_line(data = df, aes(Time-0.3, C_liver_parent, color = "Prediction"), lwd=0.7) +
   geom_point(data = df_Metabolism_1998_liver  , aes(Time_h/24, TMXliverConc_umolL, shape = 'Observation'),col="#ff5044", size=1.8) + 
@@ -872,11 +628,10 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXLiver.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
-  
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".TMXLiver.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
-  
   
 ggplot() +
   geom_line(data = df, aes(Time-0.3, C_liver_daughter, color = "Prediction"), lwd=0.7) +
@@ -903,13 +658,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDLiver.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
-
-
-
-
-
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".CTDLiver.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 ggplot() +
@@ -937,8 +688,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXurine_0106.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".TMXurine_0106.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 ggplot() +
@@ -965,8 +717,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDurine_0106.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".CTDurine_0106.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 df_urine_parent           <- as.data.frame(df %>% dplyr::select(Time, Aurine_parent))
@@ -1004,8 +757,8 @@ ggplot() +
   theme(text = element_text(size = 20))
 
 df_white_out                       <- df[(df$Time - 0.37)%%1 < 1e-5,]
-write.csv(df_white_out, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggwhite.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
-
+file_path     <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", "Hen")
+write.csv(df_white_out, paste(file_path, '/hen.eggwhite.oral.', dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 ggplot() +
   geom_line(data = df_white_out, aes(Time, C_white_parent,  color = "Prediction"),  lwd=1) + 
@@ -1032,8 +785,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggWhite.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".TMXEggWhite.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 ggplot() +
@@ -1061,8 +815,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggWhite.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".CTDEggWhite.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 df_white_parent           <- as.data.frame(df_white_out %>% dplyr::select(Time, C_white_parent))
@@ -1110,7 +865,10 @@ df_Cyolk_out_parent  <- df_yolk_out_parent[c('Time', 'Cyolk1_parent', 'Cyolk2_pa
 rownames(df_Cyolk_out_parent) <- 1:nrow(df_Cyolk_out_parent)
 mdata                         <- melt(df_Cyolk_out_parent, id=c("Time"))
 mdata2                        <- mdata[which(mdata$value == 0)-1,] 
-write.csv(mdata2, paste('C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.TMX.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+
+file_path     <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", "Hen")
+write.csv(mdata2, paste(file_path, '/hen.eggyolk.TMX.oral.', dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+
 
 ggplot() +
   geom_line(data = mdata2, aes(Time, value, col="Prediction"), lwd=1,  size = 3) + 
@@ -1137,8 +895,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Thiamethoxam (TMX)"))
-ggsave(filename = paste("C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".TMXEggYolk.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".TMXEggYolk.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 df_yolk_out_daughter   <- df_yolk_out[c('Time', 'Ayolk1_daughter', 'Ayolk2_daughter', 'Ayolk3_daughter', 'Ayolk4_daughter', 
@@ -1151,7 +910,9 @@ df_Cyolk_out_daughter  <- df_yolk_out_daughter[c('Time', 'Cyolk1_daughter', 'Cyo
 rownames(df_Cyolk_out_daughter) <- 1:nrow(df_Cyolk_out_daughter)
 mdata_daughter                         <- melt(df_Cyolk_out_daughter, id=c("Time"))
 mdata2_daughter                        <- mdata_daughter[which(mdata_daughter$value == 0)-1,] 
-write.csv(mdata2_daughter, paste('C:xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/hen.eggyolk.CTD.oral.',  dose, 'mgkg.csv', sep = ''), row.names = FALSE)
+
+file_path     <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", "Hen")
+write.csv(mdata2_daughter, paste(file_path, '/hen.eggyolk.CTD.oral.', dose, 'mgkg.csv', sep = ''), row.names = FALSE)
 
 ggplot() +
   geom_line(data = mdata2_daughter, aes(Time, value, col="Prediction"), lwd=1, size=3) + 
@@ -1178,8 +939,9 @@ ggplot() +
   ggtitle(
     label = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''),
     subtitle = paste("Clothianidin (CTD)"))
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen.", dose, ".CTDEggYolk.tiff", sep = ''),
-       dpi = 300, width = 16, height = 10,units = "cm",compression = 'lzw')
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen.", dose, ".CTDEggYolk.tiff", sep = ''))
+ggsave(file.path,
+       dpi = 300, width = 16, height = 10,units = "cm", compression = 'lzw')
 
 
 df_yolk_parent           <- as.data.frame(mdata2 %>% dplyr::select(Time, value))
@@ -1227,8 +989,10 @@ ggplot(obs_byw) +
   scale_color_brewer(palette = "Set1") + 
   labs(title = paste("Laying hen [Repeated oral dose for 4 consecutive days at ", dose, " mg/kg BW/d]", sep = ''))+
   ylab(expression("Concentration ("*mu*"mol/L)")) + xlab('Time (d)')
-ggsave(filename = paste("C:/xxx/OneDrive - Syngenta/HTTK/Bird/TMX/Plots/Hen/plot.layinghen_Panel.", dose, ".tiff", sep = ''),
+file_path           <- file.path(current_dir, "HTTK", "Bird", "TMX", "Plots", 'Hen', paste("plot.layinghen_Panel.", dose, ".tiff", sep = ''))
+ggsave(file.path,
        dpi = 300, width = 26, height = 20,units = "cm",compression = 'lzw')
+
 
 ggplot(df_byw) +
   geom_line(aes(Time, Value, color = Class), lwd=1) +
@@ -1243,7 +1007,6 @@ ggplot(df_byw) +
 
 
 # urine
-
 ggplot() +
   geom_line (data = df, aes(Time,Ww), col="#00AFBB", lwd=2) + ylab("Mass (kg)") +
   theme(text = element_text(size = 20))+ xlim(0, 10)

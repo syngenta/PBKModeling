@@ -83,7 +83,7 @@ MW_daughter             <- 249.7
 CAS_daughter            <- '210880-92-5a'
 S_daughter              <- 340                    # mg/L; http://sitem.herts.ac.uk/aeru/ppdb/en/Reports/631.htm
 pKa_a_daughter          <- 11.1                   # No dissociation; http://sitem.herts.ac.uk/aeru/ppdb/en/Reports/171.htm; pKa_Donor="pka.a") Compound H dissociation equilibirum constant
-pKa_b_daughter          <- 14-11.1                  # pka accept (base) Compound H association equilibirum constant
+pKa_b_daughter          <- 14-11.1                # pka accept (base) Compound H association equilibirum constant
 fub_daughter            <- 0.71                   # fraction unbound in plasma of rat; from SED
 LogP_daughter           <- 0.70                   # LogP httk
 Peff_daughter           <- 19.8E-6                # Cacao permeability (cm/s) from SED for human

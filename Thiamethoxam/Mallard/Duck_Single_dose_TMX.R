@@ -69,7 +69,7 @@ BW_scaledfrom         <- BW_hen
 type_hep_clearance    <- 'liver'
 
 Vmax_unit_parent          <- 'none'                   # 'umol/h/kg bw' or 'none'
-incubation_hep_parent     <- 'scaled'             # human
+incubation_hep_parent     <- 'scaled'            
 Vmax_hep_parent           <- "None"
 Km_hep_parent             <- 'None'
 Clint_ori_hep_parent      <- 258.3149 

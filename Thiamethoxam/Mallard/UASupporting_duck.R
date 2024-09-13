@@ -24,7 +24,6 @@ rm(list = ls())
 
 #==================================================================================================
 #                                      Species:Mallard duck                                       # 
-#                                     No of compartment: 5                                        #
 #==================================================================================================
 # Reference
 # PKNCA: https://cran.r-project.org/web/packages/PKNCA/vignettes/AUC-Calculation-with-PKNCA.html

@@ -20,7 +20,6 @@ library(httk)
 rm(list = ls())
 #==================================================================================================
 #                                      Species: Laying Hen                                        # 
-#                                     No of compartment: 5                                        #
 #==================================================================================================
 # httk: https://github.com/USEPA/CompTox-ExpoCast-httk/tree/main/httk
 

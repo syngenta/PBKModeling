@@ -23,7 +23,6 @@ rm(list = ls())
 
 #==================================================================================================
 #                                      Species: Laying Hen                                        # 
-#                                     No of compartment: 5                                        #
 #==================================================================================================
 # Reference
 # PKNCA: https://cran.r-project.org/web/packages/PKNCA/vignettes/AUC-Calculation-with-PKNCA.html

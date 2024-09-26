@@ -157,7 +157,7 @@ idata <-
       meanlog = m.log.fub_parent,
       sdlog = sd.log.fub_parent,
       min = qlnorm(0.025, meanlog = m.log.fub_parent, sdlog = sd.log.fub_parent),
-      max = qlnorm(0.975, meanlog = m.log.fub_parent, sdlog = sd.log.fub_parent)
+      max = 1
     ),
     
     Qgfr_daughter = rlnormTrunc(
@@ -190,7 +190,7 @@ idata <-
       meanlog = m.log.fub_daughter,
       sdlog = sd.log.fub_daughter,
       min = qlnorm(0.025, meanlog = m.log.fub_daughter, sdlog = sd.log.fub_daughter),
-      max = qlnorm(0.975, meanlog = m.log.fub_daughter, sdlog = sd.log.fub_daughter)
+      max = 1
     )
 
   )
